@@ -1,3 +1,6 @@
+import os
+
+from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -5,11 +8,18 @@ from models import AnalyzeRequest, AnalyzeResponse
 from crawler import fetch_article
 from nlp import extract_keywords
 
+load_dotenv()
+
 app = FastAPI(title="3D Word Cloud API")
+
+cors_origins = os.getenv(
+    "CORS_ORIGINS",
+    "http://localhost:5173,http://127.0.0.1:5173",
+).split(",")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=cors_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )

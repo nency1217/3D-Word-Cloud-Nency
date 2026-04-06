@@ -34,11 +34,18 @@ Enter a news article URL and watch as the app extracts key topics using NLP and 
 
 ### Environment Variables
 
-Copy the example env file and add your Firecrawl API key:
+Copy the example env files and configure:
 ```bash
 cp backend/.env.example backend/.env
-# Edit backend/.env and set your FIRECRAWL_API_KEY
+cp frontend/.env.example frontend/.env
 ```
+
+| Variable | File | Default | Description |
+|---|---|---|---|
+| `FIRECRAWL_API_KEY` | `backend/.env` | *(empty)* | Firecrawl API key (optional — falls back to BeautifulSoup) |
+| `FIRECRAWL_URL` | `backend/.env` | `https://api.firecrawl.dev/v1/scrape` | Firecrawl endpoint |
+| `CORS_ORIGINS` | `backend/.env` | `http://localhost:5173,http://127.0.0.1:5173` | Comma-separated allowed origins |
+| `VITE_API_URL` | `frontend/.env` | `http://localhost:8000` | Backend API base URL |
 
 ### One-Command Setup (macOS)
 
@@ -102,14 +109,30 @@ npm run dev -- --port 5173
 ### `GET /health`
 Returns `{ "status": "ok" }`.
 
+## Tests
+
+**Backend:**
+```bash
+cd backend
+source venv/bin/activate
+python -m pytest test_api.py -v
+```
+
+**Frontend:**
+```bash
+cd frontend
+npm test
+```
+
 ## Project Structure
 
 ```
 backend/
   main.py          — FastAPI app, CORS, /analyze endpoint
-  crawler.py       — Firecrawl API client (uses .env for secrets)
-  nlp.py           — TF-IDF + spaCy NER + VADER pipeline
+  crawler.py       — Firecrawl + BeautifulSoup fallback crawler
+  nlp.py           — TF-IDF + spaCy NER + VADER + lemmatization
   models.py        — Pydantic request/response schemas
+  test_api.py      — Backend API tests
   requirements.txt
   .env.example     — Environment variable template
   .env             — Local secrets (gitignored)
@@ -118,12 +141,14 @@ frontend/
   src/
     App.tsx              — Root state machine (idle/loading/success/error)
     types.ts             — TypeScript interfaces
-    hooks/useAnalyze.ts  — API fetch hook
+    hooks/useAnalyze.ts  — API fetch hook (configurable via VITE_API_URL)
+    hooks/useAnalyze.test.ts — State flow tests
     components/
-      URLInput/          — Glassmorphic search bar + sample chips
+      URLInput/          — Gradient mesh landing page + glass card input
       Loader/            — 3D wireframe cube + status messages
       WordCloud/         — Scene, WordSphere, WordMesh, Starfield
       InfoPanel/         — Word detail overlay
+  .env.example           — Frontend env template
 
 setup.sh               — One-command setup and launch
 ```

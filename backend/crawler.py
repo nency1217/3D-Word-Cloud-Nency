@@ -1,8 +1,11 @@
+import logging
 import os
 import re
 
 import httpx
 from dotenv import load_dotenv
+
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -83,7 +86,7 @@ async def fetch_article(url: str) -> str:
     if FIRECRAWL_API_KEY:
         try:
             return await _firecrawl_fetch(url)
-        except Exception:
-            pass  # Fall through to bs4
+        except Exception as e:
+            logger.warning("Firecrawl failed for %s: %s — falling back to bs4", url, e)
 
     return await _bs4_fallback(url)

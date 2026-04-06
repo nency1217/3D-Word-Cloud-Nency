@@ -18,7 +18,7 @@ cd ..
 # --- Frontend ---
 echo "[2/4] Installing frontend dependencies..."
 cd frontend
-npm install --silent
+npm install --legacy-peer-deps --silent
 cd ..
 
 # --- Launch ---

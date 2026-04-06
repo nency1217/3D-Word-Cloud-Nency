@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { Text } from "@react-three/drei";
 import { animated, useSpring } from "@react-spring/three";
+import { ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three";
 
 interface WordMeshProps {
@@ -22,7 +23,6 @@ const AnimatedText = animated(Text);
 export default function WordMesh({
   word,
   weight,
-  sentiment,
   position,
   onClick,
 }: WordMeshProps) {
@@ -30,25 +30,24 @@ export default function WordMesh({
   const color = getWordColor(weight);
   const fontSize = 0.12 + weight * 0.5;
 
-  const { scale, emissiveIntensity } = useSpring({
+  const { scale } = useSpring({
     scale: hovered ? 1.3 : 1,
-    emissiveIntensity: hovered ? weight * 4 : weight * 2,
     config: { tension: 300, friction: 20 },
   });
 
-  const handlePointerEnter = useCallback((e: THREE.Event) => {
+  const handlePointerEnter = useCallback((e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
     setHovered(true);
     document.body.style.cursor = "pointer";
   }, []);
 
-  const handlePointerLeave = useCallback((e: THREE.Event) => {
+  const handlePointerLeave = useCallback((e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
     setHovered(false);
     document.body.style.cursor = "default";
   }, []);
 
-  const handleClick = useCallback((e: THREE.Event) => {
+  const handleClick = useCallback((e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
     onClick();
   }, [onClick]);
@@ -60,16 +59,19 @@ export default function WordMesh({
       color={color}
       anchorX="center"
       anchorY="middle"
+      // @ts-ignore — animated scale
       scale={scale}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
       onClick={handleClick}
-      // @ts-ignore — material props passed through
-      material-emissive={color}
-      material-emissiveIntensity={emissiveIntensity}
-      material-toneMapped={false}
     >
       {word}
+      <meshStandardMaterial
+        color={color}
+        emissive={color}
+        emissiveIntensity={hovered ? weight * 4 : weight * 2}
+        toneMapped={false}
+      />
     </AnimatedText>
   );
 }

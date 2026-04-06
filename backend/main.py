@@ -1,5 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+
+from models import AnalyzeRequest, AnalyzeResponse
+from crawler import fetch_article
+from nlp import extract_keywords
 
 app = FastAPI(title="3D Word Cloud API")
 
@@ -14,3 +18,17 @@ app.add_middleware(
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+@app.post("/analyze", response_model=AnalyzeResponse)
+async def analyze(req: AnalyzeRequest):
+    try:
+        text = await fetch_article(str(req.url))
+        if len(text.split()) < 50:
+            raise HTTPException(422, "Article text too short to analyze")
+        words = extract_keywords(text, top_n=45)
+        return {"words": words, "total": len(words)}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(500, f"Analysis failed: {str(e)}")

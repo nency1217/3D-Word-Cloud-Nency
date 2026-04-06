@@ -1,0 +1,34 @@
+:root {
+  --bg-deep: #050505;
+  --bg-purple: #2e0249;
+  --cyan: #00f5ff;
+  --magenta: #ff00cc;
+  --mint: #00ffab;
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.12);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background: var(--bg-deep);
+  color: #ffffff;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Space Grotesk", sans-serif;
+  letter-spacing: 0.08em;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}

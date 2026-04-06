@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  3D Word Cloud — Setup & Launch"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -8,28 +10,29 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 # --- Backend ---
 echo ""
 echo "[1/4] Setting up Python backend..."
-cd backend
+cd "$ROOT_DIR/backend"
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt --quiet
 python -m spacy download en_core_web_sm --quiet
-cd ..
+deactivate
 
 # --- Frontend ---
 echo "[2/4] Installing frontend dependencies..."
-cd frontend
+cd "$ROOT_DIR/frontend"
 npm install --legacy-peer-deps --silent
-cd ..
 
 # --- Launch ---
 echo "[3/4] Starting servers..."
 echo ""
 
-cd backend && source venv/bin/activate && \
-  uvicorn main:app --reload --port 8000 --log-level warning &
+cd "$ROOT_DIR/backend"
+source venv/bin/activate
+uvicorn main:app --reload --port 8000 --log-level warning &
 BACKEND_PID=$!
 
-cd frontend && npm run dev -- --port 5173 &
+cd "$ROOT_DIR/frontend"
+npm run dev -- --port 5173 &
 FRONTEND_PID=$!
 
 echo ""

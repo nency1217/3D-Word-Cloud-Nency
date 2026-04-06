@@ -32,6 +32,14 @@ Enter a news article URL and watch as the app extracts key topics using NLP and 
 - Node.js 18+
 - npm
 
+### Environment Variables
+
+Copy the example env file and add your Firecrawl API key:
+```bash
+cp backend/.env.example backend/.env
+# Edit backend/.env and set your FIRECRAWL_API_KEY
+```
+
 ### One-Command Setup (macOS)
 
 ```bash
@@ -41,13 +49,13 @@ chmod +x setup.sh
 
 This will:
 1. Create a Python virtual environment and install backend dependencies
-2. Download the spaCy language model
+2. Download the spaCy language model (`en_core_web_sm`)
 3. Install frontend npm packages
-4. Start both servers concurrently
+4. Start both servers concurrently (backend on :8000, frontend on :5173)
 
 ### Manual Setup
 
-**Backend:**
+**Backend** (Terminal 1):
 ```bash
 cd backend
 python3 -m venv venv
@@ -57,10 +65,10 @@ python -m spacy download en_core_web_sm
 uvicorn main:app --reload --port 8000
 ```
 
-**Frontend:**
+**Frontend** (Terminal 2):
 ```bash
 cd frontend
-npm install
+npm install --legacy-peer-deps
 npm run dev -- --port 5173
 ```
 
@@ -99,10 +107,12 @@ Returns `{ "status": "ok" }`.
 ```
 backend/
   main.py          — FastAPI app, CORS, /analyze endpoint
-  crawler.py       — Firecrawl API client
+  crawler.py       — Firecrawl API client (uses .env for secrets)
   nlp.py           — TF-IDF + spaCy NER + VADER pipeline
   models.py        — Pydantic request/response schemas
   requirements.txt
+  .env.example     — Environment variable template
+  .env             — Local secrets (gitignored)
 
 frontend/
   src/

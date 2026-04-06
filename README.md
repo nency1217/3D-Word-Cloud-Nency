@@ -1,17 +1,119 @@
 # 3D Word Cloud - Nency
 
-An interactive web application that visualizes topics from news articles as an immersive 3D word cloud.
+An interactive web application that visualizes topics from news articles as an immersive 3D word cloud with cyber-neural glassmorphism design.
 
 ## Overview
 
-Enter a news article URL and watch as the app extracts key topics and renders them in a stunning 3D visualization with glassmorphic UI design.
+Enter a news article URL and watch as the app extracts key topics using NLP and renders them in a stunning 3D visualization. Words are sized by relevance, colored by weight tier, and arranged on a fibonacci sphere with bloom post-processing and a starfield background.
 
 ## Tech Stack
 
-- **Frontend:** React, TypeScript, React Three Fiber, Three.js, Vite
-- **Backend:** Python, FastAPI, spaCy, scikit-learn, VADER Sentiment
-- **Crawling:** Firecrawl API
+### Frontend
+- **React 18** + **TypeScript** — UI framework
+- **React Three Fiber** — React renderer for Three.js
+- **@react-three/drei** — R3F helpers (Text, OrbitControls, Float)
+- **@react-three/postprocessing** — Bloom effect
+- **@react-spring/three** — Smooth spring animations
+- **framer-motion** — DOM animation for InfoPanel
+- **Vite** — Build tool and dev server
 
-## Setup
+### Backend
+- **FastAPI** — Python async web framework
+- **Firecrawl** — Article text extraction (handles JS-rendered pages)
+- **spaCy** — Named entity recognition (en_core_web_sm)
+- **scikit-learn** — TF-IDF keyword extraction
+- **vaderSentiment** — Sentiment analysis per keyword
+- **httpx** — Async HTTP client
 
-*Coming soon — see setup.sh*
+## Setup & Run
+
+### Prerequisites
+- Python 3.10+
+- Node.js 18+
+- npm
+
+### One-Command Setup (macOS)
+
+```bash
+chmod +x setup.sh
+./setup.sh
+```
+
+This will:
+1. Create a Python virtual environment and install backend dependencies
+2. Download the spaCy language model
+3. Install frontend npm packages
+4. Start both servers concurrently
+
+### Manual Setup
+
+**Backend:**
+```bash
+cd backend
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python -m spacy download en_core_web_sm
+uvicorn main:app --reload --port 8000
+```
+
+**Frontend:**
+```bash
+cd frontend
+npm install
+npm run dev -- --port 5173
+```
+
+## Usage
+
+1. Open http://localhost:5173
+2. Paste a news article URL or click a quick-start chip (BBC, TechCrunch, etc.)
+3. Wait for the NLP pipeline to process the article
+4. Explore the 3D word cloud — drag to orbit, hover for glow, click for details
+
+## API
+
+### `POST /analyze`
+
+**Request:**
+```json
+{ "url": "https://www.bbc.com/news/articles/example" }
+```
+
+**Response:**
+```json
+{
+  "total": 45,
+  "words": [
+    { "word": "climate summit", "weight": 0.98, "sentiment": 0.12 },
+    { "word": "carbon emissions", "weight": 0.87, "sentiment": -0.31 }
+  ]
+}
+```
+
+### `GET /health`
+Returns `{ "status": "ok" }`.
+
+## Project Structure
+
+```
+backend/
+  main.py          — FastAPI app, CORS, /analyze endpoint
+  crawler.py       — Firecrawl API client
+  nlp.py           — TF-IDF + spaCy NER + VADER pipeline
+  models.py        — Pydantic request/response schemas
+  requirements.txt
+
+frontend/
+  src/
+    App.tsx              — Root state machine (idle/loading/success/error)
+    types.ts             — TypeScript interfaces
+    hooks/useAnalyze.ts  — API fetch hook
+    components/
+      URLInput/          — Glassmorphic search bar + sample chips
+      Loader/            — 3D wireframe cube + status messages
+      WordCloud/         — Scene, WordSphere, WordMesh, Starfield
+      InfoPanel/         — Word detail overlay
+
+setup.sh               — One-command setup and launch
+```

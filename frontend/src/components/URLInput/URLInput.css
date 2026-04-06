@@ -114,3 +114,17 @@
   border-color: rgba(0, 245, 255, 0.3);
   background: rgba(0, 245, 255, 0.08);
 }
+
+@media (max-width: 640px) {
+  .url-input-title {
+    font-size: 1.6rem;
+  }
+
+  .url-input-wrapper {
+    flex-direction: column;
+  }
+
+  .url-input-btn {
+    width: 100%;
+  }
+}

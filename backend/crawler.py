@@ -19,4 +19,12 @@ async def fetch_article(url: str) -> str:
         )
         resp.raise_for_status()
         data = resp.json()
-        return data["data"]["markdown"]
+
+        if not data.get("success"):
+            raise ValueError(f"Firecrawl failed: {data.get('error', 'Unknown error')}")
+
+        markdown = data.get("data", {}).get("markdown", "")
+        if not markdown:
+            raise ValueError("No content extracted from the article")
+
+        return markdown

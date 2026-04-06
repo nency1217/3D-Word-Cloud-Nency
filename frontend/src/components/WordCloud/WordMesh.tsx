@@ -28,7 +28,7 @@ export default function WordMesh({
 }: WordMeshProps) {
   const [hovered, setHovered] = useState(false);
   const color = getWordColor(weight);
-  const fontSize = 0.12 + weight * 0.5;
+  const fontSize = 0.15 + weight * 0.65;
 
   const { scale } = useSpring({
     scale: hovered ? 1.3 : 1,

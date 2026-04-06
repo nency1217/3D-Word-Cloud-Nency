@@ -115,7 +115,7 @@ Returns `{ "status": "ok" }`.
 ```bash
 cd backend
 source venv/bin/activate
-python -m pytest test_api.py -v
+python -m pytest tests/test_api.py -v
 ```
 
 **Frontend:**
@@ -128,14 +128,17 @@ npm test
 
 ```
 backend/
-  main.py          — FastAPI app, CORS, /analyze endpoint
-  crawler.py       — Firecrawl + BeautifulSoup fallback crawler
-  nlp.py           — TF-IDF + spaCy NER + VADER + lemmatization
-  models.py        — Pydantic request/response schemas
-  test_api.py      — Backend API tests
+  main.py              — FastAPI app, CORS, /analyze endpoint
+  models/
+    schemas.py         — Pydantic request/response schemas
+  services/
+    crawler.py         — Firecrawl + BeautifulSoup fallback crawler
+    nlp.py             — TF-IDF + spaCy NER + VADER + markdown cleaning
+  tests/
+    test_api.py        — Backend API tests (mocked, offline-safe)
   requirements.txt
-  .env.example     — Environment variable template
-  .env             — Local secrets (gitignored)
+  .env.example         — Environment variable template
+  .env                 — Local secrets (gitignored)
 
 frontend/
   src/

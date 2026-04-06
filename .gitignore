@@ -22,3 +22,4 @@ dist/
 
 # Docs (internal planning)
 docs/superpowers/
+.superpowers/

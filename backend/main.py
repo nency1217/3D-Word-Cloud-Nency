@@ -4,9 +4,9 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from models import AnalyzeRequest, AnalyzeResponse
-from crawler import fetch_article
-from nlp import extract_keywords
+from models.schemas import AnalyzeRequest, AnalyzeResponse
+from services.crawler import fetch_article
+from services.nlp import extract_keywords
 
 load_dotenv()
 

@@ -17,17 +17,17 @@
 body {
   font-family: "Inter", sans-serif;
   background: var(--bg-deep);
-  background-image: radial-gradient(ellipse at 50% 50%, var(--bg-purple) 0%, var(--bg-deep) 70%);
   color: #ffffff;
-  overflow: hidden;
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
 }
 
-@media (max-width: 640px) {
-  body {
-    overflow-y: auto;
-  }
+body.scrollable {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: auto;
+  min-height: 100vh;
 }
 
 h1, h2, h3, h4, h5, h6 {

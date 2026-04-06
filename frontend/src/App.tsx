@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { WordData } from "./types";
 import useAnalyze from "./hooks/useAnalyze";
 import URLInput from "./components/URLInput/URLInput";
@@ -9,6 +9,11 @@ import InfoPanel from "./components/InfoPanel/InfoPanel";
 function App() {
   const { appState, words, error, analyze, reset } = useAnalyze();
   const [selectedWord, setSelectedWord] = useState<WordData | null>(null);
+
+  useEffect(() => {
+    document.body.classList.toggle("scrollable", appState === "idle");
+    return () => document.body.classList.remove("scrollable");
+  }, [appState]);
 
   return (
     <div style={{ width: "100%", height: "100%", position: "relative" }}>

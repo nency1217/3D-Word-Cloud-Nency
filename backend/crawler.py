@@ -1,7 +1,12 @@
-import httpx
+import os
 
-FIRECRAWL_API_KEY = "fc-14474a120f854d499cadaa487ec7f13a"
-FIRECRAWL_URL = "https://api.firecrawl.dev/v1/scrape"
+import httpx
+from dotenv import load_dotenv
+
+load_dotenv()
+
+FIRECRAWL_API_KEY = os.getenv("FIRECRAWL_API_KEY", "")
+FIRECRAWL_URL = os.getenv("FIRECRAWL_URL", "https://api.firecrawl.dev/v1/scrape")
 
 
 async def fetch_article(url: str) -> str:
